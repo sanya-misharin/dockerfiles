@@ -23,3 +23,5 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 CMD ["php-fpm"]
+
+CMD ["/usr/bin/supervisord"]
