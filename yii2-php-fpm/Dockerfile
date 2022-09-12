@@ -11,15 +11,14 @@ RUN apt-get update && apt-get install -y \
         libpng-dev \
         libzip-dev \
         zlib1g-dev libicu-dev g++ \
-        supervisor \
-
-    && docker-php-ext-install -j$(nproc) bcmath iconv mbstring mysqli pdo_mysql zip intl \
+        libpq-dev \
+    && docker-php-ext-install -j$(nproc) bcmath iconv mbstring mysqli pgsql pdo pdo_mysql pdo_pgsql zip intl \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install sockets
+    && docker-php-ext-install sockets \
+    && pecl install xdebug-2.7.1 \
+    && docker-php-ext-enable xdebug \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
-
-CMD ["/usr/bin/supervisord"]
