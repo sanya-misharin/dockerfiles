@@ -24,4 +24,4 @@ RUN apt -qy install $PHPIZE_DEPS \
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+WORKDIR /srv
