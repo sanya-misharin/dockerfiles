@@ -13,14 +13,11 @@ RUN apt-get update && apt-get install -y \
         libzip-dev \
         zlib1g-dev libicu-dev g++ \
         libpq-dev \
+        supervisor \
     && docker-php-ext-install -j$(nproc) bcmath iconv mbstring mysqli pgsql pdo pdo_mysql pdo_pgsql zip intl \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install sockets
-
-RUN apt -qy install $PHPIZE_DEPS \
-    && pecl install xdebug-2.9.1 \
-    && docker-php-ext-enable xdebug
 
 RUN apt-get update && apt-get install -y \
     librdkafka-dev \
@@ -30,3 +27,8 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /srv
+
+COPY supervisor/supervisord.conf /etc/supervisord.conf
+COPY supervisor/supervisor.d /etc/supervisor.d/
+
+CMD ["/usr/bin/supervisord"]
